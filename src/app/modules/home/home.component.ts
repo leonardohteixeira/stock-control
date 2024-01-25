@@ -33,7 +33,7 @@ export class HomeComponent {
     private messageService: MessageService
   ) {}
 
-  OnSubmitLoginForm(): void {
+  onSubmitLoginForm(): void {
     if (this.loginForm.value && this.loginForm.valid) {
       this.userService.authUser(this.loginForm.value as AuthRequest).subscribe({
         next: (response) => {
@@ -62,7 +62,7 @@ export class HomeComponent {
     }
   }
 
-  OnSubmitSignupForm(): void {
+  onSubmitSignupForm(): void {
     if (this.signupForm.value && this.signupForm.valid) {
       this.userService
         .signupUser(this.signupForm.value as SignupUserRequest)
