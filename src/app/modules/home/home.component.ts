@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SignupUserRequest } from 'src/app/models/interfaces/user/SignupUserRequest';
@@ -30,7 +31,8 @@ export class HomeComponent {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private cookieService: CookieService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private Router: Router
   ) {}
 
   onSubmitLoginForm(): void {
@@ -40,6 +42,7 @@ export class HomeComponent {
           if (response) {
             this.cookieService.set('USER_INFO', response?.token);
             this.loginForm.reset();
+            this.Router.navigate(['/dashboard']);
 
             this.messageService.add({
               severity: 'success',
