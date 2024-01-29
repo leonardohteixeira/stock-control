@@ -1,12 +1,11 @@
-import { Router } from '@angular/router';
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SignupUserRequest } from 'src/app/models/interfaces/user/SignupUserRequest';
-import { SignupUserResponse } from 'src/app/models/interfaces/user/SignupUserResponse';
 import { AuthRequest } from 'src/app/models/interfaces/user/auth/AuthRequest';
 import { UserService } from 'src/app/services/user/user.service';
 import { CookieService } from 'ngx-cookie-service';
 import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -34,38 +33,39 @@ export class HomeComponent implements OnDestroy {
     private userService: UserService,
     private cookieService: CookieService,
     private messageService: MessageService,
-    private Router: Router
+    private router: Router
   ) {}
 
   onSubmitLoginForm(): void {
     if (this.loginForm.value && this.loginForm.valid) {
-      this.userService.authUser(this.loginForm.value as AuthRequest)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            this.cookieService.set('USER_INFO', response?.token);
-            this.loginForm.reset();
-            this.Router.navigate(['/dashboard']);
+      this.userService
+        .authUser(this.loginForm.value as AuthRequest)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this.cookieService.set('USER_INFO', response?.token);
+              this.loginForm.reset();
+              this.router.navigate(['/dashboard']);
 
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: `Bem vindo de volta ${response?.name}!`,
+                life: 2000,
+              });
+            }
+          },
+          error: (err) => {
             this.messageService.add({
-              severity: 'success',
-              summary: 'Sucesso',
-              detail: `Bem vindo de volta ${response?.name}!`,
+              severity: 'error',
+              summary: 'Erro',
+              detail: `Erro ao fazer o login!`,
               life: 2000,
             });
-          }
-        },
-        error: (err) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: `Erro ao fazer o login!`,
-            life: 2000,
-          });
-          console.log(err);
-        },
-      });
+            console.log(err);
+          },
+        });
     }
   }
 
