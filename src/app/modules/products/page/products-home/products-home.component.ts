@@ -5,6 +5,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductsService } from 'src/app/services/products/products.service';
 import { GetAllProductsResponse } from 'src/app/models/interfaces/products/response/GetAllProductsResponse';
+import { EventAction } from 'src/app/models/interfaces/enums/products/event/EventAction';
 
 
 @Component({
@@ -58,6 +59,12 @@ constructor(
         this.router.navigate(['/dashboard']);
       }
     })
+  }
+
+  handleProductAction(event: EventAction): void {
+    if(event){
+      console.log('DADOS DO EVENTO RECEBIDO', event);
+    }
   }
 
   ngOnDestroy(): void {
